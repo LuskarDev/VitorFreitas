@@ -59,10 +59,18 @@ export default function Services() {
                   className="group relative aspect-[3/4] rounded-2xl overflow-hidden border border-white/[.08] hover:border-[var(--color-gold)]/60 transition-colors duration-500"
                   data-cursor="VIEW"
                 >
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${gradients[i % gradients.length]} transition-transform duration-700 group-hover:scale-110`}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/10 opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
+                  {s.image ? (
+                    <img
+                      src={s.image}
+                      alt={s.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-br ${gradients[i % gradients.length]} transition-transform duration-700 group-hover:scale-110`}
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20 opacity-90 group-hover:opacity-95 transition-opacity duration-500" />
 
                   <div className="relative z-10 h-full flex flex-col justify-between p-7">
                     <Icon className="text-[var(--color-gold)]" size={34} strokeWidth={1} />

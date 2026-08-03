@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FiInstagram, FiLinkedin, FiYoutube } from "react-icons/fi";
 import { FaDribbble } from "react-icons/fa";
 import { SiVimeo } from "react-icons/si";
@@ -60,9 +60,16 @@ export default function Footer() {
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 border-t border-white/[.06] text-xs text-[var(--color-text-secondary)]">
           <p>© {new Date().getFullYear()} Vítor Freitas. Todos os direitos reservados.</p>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors" data-cursor-hover>Política de Privacidade</a>
-            <a href="#" className="hover:text-white transition-colors" data-cursor-hover>Termos de Uso</a>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <Link to="/politica-de-privacidade" className="hover:text-white transition-colors" data-cursor-hover>
+              Política de Privacidade
+            </Link>
+            <Link to="/termos-de-uso" className="hover:text-white transition-colors" data-cursor-hover>
+              Termos de Uso
+            </Link>
+            <Link to="/termos-de-agendamento" className="hover:text-white transition-colors" data-cursor-hover>
+              Termos de Agendamento
+            </Link>
           </div>
         </div>
       </div>

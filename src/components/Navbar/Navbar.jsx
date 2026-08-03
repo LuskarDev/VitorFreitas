@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { HiOutlineArrowUpRight, HiBars3, HiXMark } from "react-icons/hi2";
@@ -10,6 +10,39 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const menuButtonRef = useRef(null);
+  const mobileMenuRef = useRef(null);
+
+  // Fecha com Esc e devolve o foco ao botao hamburguer (comportamento
+  // esperado de menu mobile por quem navega via teclado/leitor de tela).
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        menuButtonRef.current?.focus();
+        return;
+      }
+      // Focus trap simples: mantem o Tab circulando dentro do menu aberto.
+      if (e.key === "Tab" && mobileMenuRef.current) {
+        const focusables = mobileMenuRef.current.querySelectorAll(
+          'a[href], button:not([disabled])'
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -88,21 +121,25 @@ export default function Navbar() {
         </a>
 
         <nav className="hidden lg:flex items-center gap-9">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => {
-                e.preventDefault();
-                goTo(link.href);
-              }}
-              className="text-xs tracking-[0.15em] uppercase text-[var(--color-text-secondary)] hover:text-white transition-colors relative group"
-              data-cursor-hover
-            >
-              {link.label}
-              <span className="absolute -bottom-1.5 left-0 w-0 h-px bg-[var(--color-gold)] transition-all duration-300 group-hover:w-full" />
-            </a>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = location.pathname === "/" && location.hash === link.href;
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
+                onClick={(e) => {
+                  e.preventDefault();
+                  goTo(link.href);
+                }}
+                className="text-xs tracking-[0.15em] uppercase text-[var(--color-text-secondary)] hover:text-white transition-colors relative group"
+                data-cursor-hover
+              >
+                {link.label}
+                <span className="absolute -bottom-1.5 left-0 w-0 h-px bg-[var(--color-gold)] transition-all duration-300 group-hover:w-full" />
+              </a>
+            );
+          })}
         </nav>
 
         <a
@@ -118,9 +155,12 @@ export default function Navbar() {
         </a>
 
         <button
+          ref={menuButtonRef}
           className="lg:hidden text-white text-2xl"
           onClick={() => setOpen((o) => !o)}
-          aria-label="Menu"
+          aria-label={open ? "Fechar menu" : "Abrir menu"}
+          aria-expanded={open}
+          aria-controls="mobile-menu"
         >
           {open ? <HiXMark /> : <HiBars3 />}
         </button>
@@ -129,6 +169,8 @@ export default function Navbar() {
       <AnimatePresence>
         {open && (
           <motion.div
+            id="mobile-menu"
+            ref={mobileMenuRef}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -136,19 +178,23 @@ export default function Navbar() {
             className="lg:hidden overflow-hidden bg-[#060606] border-t border-white/[.08]"
           >
             <div className="flex flex-col px-6 py-6 gap-5">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goTo(link.href);
-                  }}
-                  className="text-sm tracking-[0.15em] uppercase text-[var(--color-text-secondary)]"
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = location.pathname === "/" && location.hash === link.href;
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    aria-current={isActive ? "page" : undefined}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      goTo(link.href);
+                    }}
+                    className="text-sm tracking-[0.15em] uppercase text-[var(--color-text-secondary)]"
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
               <a
                 href="#contato"
                 onClick={(e) => {

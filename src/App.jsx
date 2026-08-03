@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import useLenis from "./hooks/useLenis";
 import CustomCursor from "./components/Cursor/CustomCursor";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home";
-import ProjectPage from "./pages/ProjectPage";
+
+const ProjectPage = lazy(() => import("./pages/ProjectPage"));
+const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"));
+const TermsOfUse = lazy(() => import("./pages/legal/TermsOfUse"));
+const BookingTerms = lazy(() => import("./pages/legal/BookingTerms"));
 
 export default function App() {
   useLenis();
@@ -32,10 +36,15 @@ export default function App() {
 
       <Navbar />
       <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/projeto/:slug" element={<ProjectPage />} />
-        </Routes>
+        <Suspense fallback={<div className="min-h-screen" />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/projeto/:slug" element={<ProjectPage />} />
+            <Route path="/politica-de-privacidade" element={<PrivacyPolicy />} />
+            <Route path="/termos-de-uso" element={<TermsOfUse />} />
+            <Route path="/termos-de-agendamento" element={<BookingTerms />} />
+          </Routes>
+        </Suspense>
       </main>
       <Footer />
     </div>

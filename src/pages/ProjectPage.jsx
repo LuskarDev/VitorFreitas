@@ -6,9 +6,12 @@ import {
   HiOutlineArrowUpRight,
   HiPlay,
   HiStar,
+  HiChevronRight,
 } from "react-icons/hi2";
 import { getProjectBySlug, getRelatedProjects } from "../data/projects";
 import useScrollReveal from "../hooks/useScrollReveal";
+import useDocumentMeta from "../hooks/useDocumentMeta";
+import useJsonLd from "../hooks/useJsonLd";
 
 const gradients = [
   "from-[#3a2f22] via-[#171310] to-[#0a0a0a]",
@@ -34,12 +37,61 @@ export default function ProjectPage() {
     );
   }, [slug]);
 
+  useDocumentMeta(
+    project
+      ? {
+          title: project.title,
+          description: project.result || project.solution,
+          path: `/projeto/${slug}`,
+          image: project.cover,
+        }
+      : undefined
+  );
+
+  useJsonLd(
+    project
+      ? {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://vitorfreitas.com/" },
+            { "@type": "ListItem", position: 2, name: "Portfólio", item: "https://vitorfreitas.com/#portfolio" },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: project.title,
+              item: `https://vitorfreitas.com/projeto/${slug}`,
+            },
+          ],
+        }
+      : null,
+    "breadcrumb-jsonld"
+  );
+
   if (!project) return <Navigate to="/" replace />;
 
   const related = getRelatedProjects(slug, 3);
 
   return (
     <div ref={ref} className="pt-28">
+      {/* Breadcrumbs */}
+      <nav
+        aria-label="Breadcrumb"
+        className="max-w-[1600px] mx-auto px-6 lg:px-10 pt-6 flex items-center gap-2 text-xs text-[var(--color-text-secondary)]"
+      >
+        <Link to="/" className="hover:text-[var(--color-gold)] transition-colors">
+          Home
+        </Link>
+        <HiChevronRight size={12} aria-hidden="true" />
+        <Link to="/#portfolio" className="hover:text-[var(--color-gold)] transition-colors">
+          Portfólio
+        </Link>
+        <HiChevronRight size={12} aria-hidden="true" />
+        <span className="text-white/70" aria-current="page">
+          {project.title}
+        </span>
+      </nav>
+
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[480px] w-full overflow-hidden">
         <div className="project-hero-cover absolute inset-0 invisible">
@@ -176,11 +228,7 @@ export default function ProjectPage() {
             data-cursor="PLAY"
           >
             <img
-              src={
-                project.cover.includes("photographer-1")
-                  ? "/images/hero/photographer-2.png"
-                  : "/images/hero/photographer-1.png"
-              }
+              src="/images/bastidores/camera-show.jpg"
               alt="Bastidores da produção"
               className="w-full h-full object-cover"
             />
@@ -246,12 +294,20 @@ export default function ProjectPage() {
                 className="group relative aspect-video rounded-xl overflow-hidden border border-white/[.08] block"
                 data-cursor="OPEN"
               >
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${
-                    gradients[i % gradients.length]
-                  } transition-transform duration-700 group-hover:scale-110`}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+                {item.image ? (
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                ) : (
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${
+                      gradients[i % gradients.length]
+                    } transition-transform duration-700 group-hover:scale-110`}
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/5" />
                 <div className="absolute bottom-0 left-0 right-0 p-5">
                   <h3 className="text-lg leading-tight">{item.title}</h3>
                   <p className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-text-secondary)] mt-1">

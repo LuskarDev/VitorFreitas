@@ -1,30 +1,43 @@
-import { useEffect } from "react";
+import { useEffect, Suspense, lazy } from "react";
 import { useLocation } from "react-router-dom";
 import Hero from "../components/Hero/Hero";
 import Stats from "../components/Stats/Stats";
 import Services from "../components/Services/Services";
 import Portfolio from "../components/Portfolio/Portfolio";
 import About from "../components/About/About";
-import Clients from "../components/Clients/Clients";
-import Testimonials from "../components/Testimonials/Testimonials";
-import Bastidores from "../components/Bastidores/Bastidores";
-import CTA from "../components/CTA/CTA";
-import Contact from "../components/Contact/Contact";
+
+// Abaixo da dobra: adiadas com React.lazy para não entrarem no bundle
+// inicial (Testimonials usa Swiper, Contact usa Framer Motion pesado).
+const Clients = lazy(() => import("../components/Clients/Clients"));
+const Testimonials = lazy(() => import("../components/Testimonials/Testimonials"));
+const Bastidores = lazy(() => import("../components/Bastidores/Bastidores"));
+const CTA = lazy(() => import("../components/CTA/CTA"));
+const Contact = lazy(() => import("../components/Contact/Contact"));
 
 export default function Home() {
   const location = useLocation();
 
   useEffect(() => {
     if (!location.hash) return;
-    const t = setTimeout(() => {
+    let attempts = 0;
+    let raf;
+    const tryScroll = () => {
       const el = document.querySelector(location.hash);
-      if (el && window.lenis) {
-        window.lenis.scrollTo(el, { offset: -80, immediate: true });
-      } else if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
+      if (el) {
+        if (window.lenis) {
+          window.lenis.scrollTo(el, { offset: -80, immediate: true });
+        } else {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+        return;
       }
-    }, 150);
-    return () => clearTimeout(t);
+      // Seção pode ainda estar em um chunk lazy carregando (abaixo da
+      // dobra); tenta de novo por até ~2s antes de desistir.
+      attempts += 1;
+      if (attempts < 40) raf = setTimeout(tryScroll, 50);
+    };
+    raf = setTimeout(tryScroll, 100);
+    return () => clearTimeout(raf);
   }, [location.hash]);
 
   return (
@@ -34,11 +47,13 @@ export default function Home() {
       <Services />
       <Portfolio />
       <About />
-      <Clients />
-      <Testimonials />
-      <Bastidores />
-      <CTA />
-      <Contact />
+      <Suspense fallback={null}>
+        <Clients />
+        <Testimonials />
+        <Bastidores />
+        <CTA />
+        <Contact />
+      </Suspense>
     </>
   );
 }

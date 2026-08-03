@@ -92,10 +92,18 @@ export default function Portfolio() {
                   className="group relative aspect-video rounded-xl overflow-hidden border border-white/[.08] block cursor-none"
                   data-cursor="OPEN"
                 >
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${gradients[i % gradients.length]} transition-transform duration-700 group-hover:scale-110`}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent backdrop-blur-0 group-hover:backdrop-blur-[1px] transition-all duration-500" />
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-br ${gradients[i % gradients.length]} transition-transform duration-700 group-hover:scale-110`}
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/5 group-hover:backdrop-blur-[1px] transition-all duration-500" />
 
                   <span className="absolute top-4 right-4 text-[10px] tracking-[0.2em] font-mono text-[var(--color-gold)] border border-[var(--color-gold)]/40 rounded-full px-2.5 py-1 bg-black/40">
                     {item.tag}

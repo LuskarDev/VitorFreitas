@@ -7,7 +7,7 @@ export const projectDetails = {
     client: "Beija-Flor Moda",
     year: "2025",
     services: ["Direção Criativa", "Fotografia", "Filmagem"],
-    cover: "/images/hero/photographer-1.png",
+    cover: "/images/portfolio/editorial-beija-flor.jpg",
     problem:
       "A marca precisava de um editorial que rompesse com o catálogo tradicional e comunicasse a nova coleção como uma experiência sensorial, não apenas um produto.",
     solution:
@@ -26,7 +26,7 @@ export const projectDetails = {
     client: "L'Oréal Brasil",
     year: "2025",
     services: ["Fotografia de Beleza", "Direção de Arte"],
-    cover: "/images/hero/photographer-2.png",
+    cover: "/images/portfolio/campanha-la-vie-est-belle.jpg",
     problem:
       "Lançamento de fragrância exigia imagens que comunicassem sofisticação e emoção em poucos segundos de scroll.",
     solution:
@@ -45,7 +45,7 @@ export const projectDetails = {
     client: "Clínica Care",
     year: "2024",
     services: ["Vídeo Institucional", "Fotografia Corporativa"],
-    cover: "/images/hero/photographer-1.png",
+    cover: "/images/portfolio/institucional-clinica-care.jpg",
     problem:
       "A clínica precisava transmitir confiança e humanidade num setor onde a comunicação costuma ser fria e genérica.",
     solution:
@@ -64,7 +64,7 @@ export const projectDetails = {
     client: "Show Vibes Produções",
     year: "2025",
     services: ["Cobertura de Evento", "Edição Same-Day"],
-    cover: "/images/hero/photographer-2.png",
+    cover: "/images/portfolio/show-vibes.jpg",
     problem:
       "Evento de grande porte precisava de conteúdo pronto para redes sociais ainda durante a madrugada do show.",
     solution:
@@ -83,7 +83,7 @@ export const projectDetails = {
     client: "Riviera de São Lourenço",
     year: "2024",
     services: ["Drone & Aéreas", "Filmagem Institucional"],
-    cover: "/images/hero/photographer-1.png",
+    cover: "/images/portfolio/riviera-de-sao-lourenco.jpg",
     problem:
       "O empreendimento precisava mostrar escala e localização de um jeito que fotos terrestres não conseguiam transmitir.",
     solution:
@@ -102,7 +102,7 @@ export const projectDetails = {
     client: "Renner",
     year: "2026",
     services: ["Campanha de Moda", "Direção Criativa"],
-    cover: "/images/hero/photographer-2.png",
+    cover: "/images/portfolio/renner-verao-26.jpg",
     problem:
       "A coleção Verão 26 precisava de uma campanha nacional que funcionasse tanto em outdoor quanto em formato vertical para redes sociais.",
     solution:
